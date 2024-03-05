@@ -11,18 +11,15 @@ public class WebConfig {
 
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.csrf((csrf) -> csrf.ignoringRequestMatchers("/hello-rest")
-                        .ignoringRequestMatchers("/secure/hello")
-                        .ignoringRequestMatchers("/hello")
-                        .ignoringRequestMatchers("/translateHello")
-                        .ignoringRequestMatchers("/secure/admin")
-                        .ignoringRequestMatchers("/translator"))
-                .authorizeHttpRequests((requests) -> requests.requestMatchers("/secure/hello").authenticated()
+        httpSecurity.authorizeHttpRequests((requests) -> requests.requestMatchers("/secure/hello").authenticated()
                         .requestMatchers("/secure/admin").authenticated()
                         .requestMatchers("/translator").authenticated()
                         .requestMatchers("/hello-rest").permitAll()
                         .requestMatchers("/hello").permitAll()
                         .requestMatchers("/translateHello").permitAll())
+                .csrf((csrf) -> csrf.ignoringRequestMatchers("/secure/hello")
+                        .ignoringRequestMatchers("/secure/admin")
+                        .ignoringRequestMatchers("/translator"))
                 .httpBasic(Customizer.withDefaults());
 
         return httpSecurity.build();
